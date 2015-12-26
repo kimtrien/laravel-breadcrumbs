@@ -1,5 +1,7 @@
 <?php
-class Breadcrumbs
+namespace KjmTrue\Breadcrumbs;
+
+class Breadcrumb
 {
     protected static $breadcrumbs = [];
 
