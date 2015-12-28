@@ -2,6 +2,7 @@
 namespace KjmTrue\Breadcrumbs;
 
 use Illuminate\Support\ServiceProvider;
+use Blade;
 
 class BreadcrumbsServiceProvider extends ServiceProvider
 {
@@ -10,7 +11,14 @@ class BreadcrumbsServiceProvider extends ServiceProvider
      *
      * @var bool
      */
-//    protected $defer = true;
+    protected $defer = true;
+
+    public function boot()
+    {
+        Blade::directive('breadcrumb', function () {
+            return "<?php echo Breadcrumb::render(); ?>";
+        });
+    }
 
     /**
      * Register the application services.
@@ -20,7 +28,7 @@ class BreadcrumbsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('breadcrumbs', function ($app) {
-            $breadcrumbs = new Breadcrumbs();
+            $breadcrumbs = new Breadcrumb();
 
             return $breadcrumbs;
         });
