@@ -5,25 +5,26 @@ class Breadcrumb
 {
     protected static $breadcrumbs = [];
 
-    protected $divider = '/';
+    protected $divider;
 
-    protected $cssClass = [];
+    protected $cssClass;
 
-    protected $listElement = 'ul';
+    protected $listElement;
 
-    protected $itemElement = 'li';
+    protected $itemElement;
 
-    protected $beforeElement = '';
+    protected $beforeElement;
+
+    protected $showLast;
 
     public function __construct()
     {
-        if (config('breadcrumb')) {
-            $this->divider       = config('breadcrumb.divider');
-            $this->cssClass      = config('breadcrumb.cssClass');
-            $this->listElement   = config('breadcrumb.listElement');
-            $this->itemElement   = config('breadcrumb.itemElement');
-            $this->beforeElement = config('breadcrumb.beforeElement');
-        }
+        $this->divider       = config('breadcrumb.divider',       '/');
+        $this->cssClass      = config('breadcrumb.cssClass',      []);
+        $this->listElement   = config('breadcrumb.listElement',   'ul');
+        $this->itemElement   = config('breadcrumb.itemElement',   'li');
+        $this->beforeElement = config('breadcrumb.beforeElement', '');
+        $this->showLast      = config('breadcrumb.showLast',      true);
     }
 
     /**
@@ -119,10 +120,13 @@ class Breadcrumb
             $output .= $crumb['before'];
         }
 
-        if ($isLast) {
+        if (($isLast && !$this->showLast) || !$crumb['href']) {
             $output .= "<span>{$crumb['name']}</span>";
         } else {
             $output .= "<a href='{$crumb['href']}'>{$crumb['name']}</a>";
+        }
+
+        if (! $isLast) {
             $output .= $this->divider;
         }
 
