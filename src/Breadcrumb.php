@@ -161,8 +161,12 @@ class Breadcrumb
     /**
      * @return string
      */
-    public function render()
+    public function render($group = null)
     {
+        if ($group) {
+            $this->setConfigGroup($group);
+        }
+
         if (! self::$breadcrumbs) {
             return '';
         }
@@ -175,5 +179,34 @@ class Breadcrumb
             $this->beforeElement   .
             $this->renderCrubms() .
         '</' . $listElement . '>';
+    }
+
+    private function setConfigGroup($group)
+    {
+        $config_name = 'breadcrumb.' . $group . '.';
+
+        if (config($config_name . 'divider')) {
+            $this->divider = config($config_name . 'divider');
+        }
+
+        if (config($config_name . 'cssClass')) {
+            $this->cssClass = config($config_name . 'cssClass');
+        }
+
+        if (config($config_name . 'listElement')) {
+            $this->listElement = config($config_name . 'listElement');
+        }
+
+        if (config($config_name . 'itemElement')) {
+            $this->itemElement = config($config_name . 'itemElement');
+        }
+
+        if (config($config_name . 'beforeElement')) {
+            $this->beforeElement = config($config_name . 'beforeElement');
+        }
+
+        if (config($config_name . 'showLast')) {
+            $this->showLast = config($config_name . 'showLast');
+        }
     }
 }
