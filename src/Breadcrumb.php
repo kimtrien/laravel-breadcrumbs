@@ -17,11 +17,13 @@ class Breadcrumb
 
     protected $showLast;
 
+    protected $position = 1;
+
     public function __construct()
     {
         $this->divider       = config('breadcrumb.divider',       '/');
         $this->cssClass      = config('breadcrumb.cssClass',      []);
-        $this->listElement   = config('breadcrumb.listElement',   'ul');
+        $this->listElement   = config('breadcrumb.listElement',   'ol');
         $this->itemElement   = config('breadcrumb.itemElement',   'li');
         $this->beforeElement = config('breadcrumb.beforeElement', '');
         $this->showLast      = config('breadcrumb.showLast',      true);
@@ -114,7 +116,7 @@ class Breadcrumb
             $itemClass = implode(' ', $crumb['class']);
         }
 
-        $output = "<{$this->itemElement} class='{$itemClass}'>";
+        $output = "<{$this->itemElement} class='{$itemClass}' property='itemListElement' typeof='ListItem'>";
 
         if ($crumb['before']) {
             $output .= $crumb['before'];
@@ -123,8 +125,12 @@ class Breadcrumb
         if (($isLast && !$this->showLast) || !$crumb['href']) {
             $output .= "<span>{$crumb['name']}</span>";
         } else {
-            $output .= "<a href='{$crumb['href']}'>{$crumb['name']}</a>";
+            $output .= "<a href='{$crumb['href']}' property='item' typeof='WebPage'><span property='name'>{$crumb['name']}</span></a>";
         }
+
+        $position = $this->position;
+        $output .= "<meta property='position' content='{$position}'>";
+        $this->position ++ ;
 
         if (! $isLast) {
             $output .= $this->divider;
@@ -163,9 +169,11 @@ class Breadcrumb
 
         $cssClass = implode(' ', $this->cssClass);
 
-        return '<ul class="' . $cssClass . '">' .
+        $listElement = $this->listElement;
+
+        return '<' . $listElement . ' class="' . $cssClass . '" vocab="http://schema.org/" typeof="BreadcrumbList">' .
             $this->beforeElement   .
             $this->renderCrubms() .
-        '</ul>';
+        '</' . $listElement . '>';
     }
 }
