@@ -159,6 +159,8 @@ class Breadcrumb
     }
 
     /**
+     * @param null $group
+     *
      * @return string
      */
     public function render($group = null)
@@ -183,7 +185,7 @@ class Breadcrumb
 
     private function setConfigGroup($group)
     {
-        $config_name = 'breadcrumb.' . $group . '.';
+        $config_name = 'breadcrumb.groups.' . $group . '.';
 
         if (config($config_name . 'divider')) {
             $this->divider = config($config_name . 'divider');
